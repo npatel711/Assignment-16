@@ -21,24 +21,24 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import Data
-d3.csv("data.csv")
+d3.csv("assets/data/data.csv")
   .then(function(newsData) {
 
     // Step 1: Parse Data/Cast as numbers
     // ==============================
-    hairData.forEach(function(data) {
+    newsData.forEach(function(data) {
       data.poverty = +data.poverty;
-      data.obesity = +data.obesity;
+      data.smokes = +data.smokes;
     });
 
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(hairData, d => d.poverty)])
+      .domain([20, d3.max(newsData, d => d.poverty)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(hairData, d => d.obesity)])
+      .domain([0, d3.max(newsData, d => d.smokes)])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -62,7 +62,7 @@ d3.csv("data.csv")
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
-    .attr("cy", d => yLinearScale(d.obesity))
+    .attr("cy", d => yLinearScale(d.smokes))
     .attr("r", "15")
     .attr("fill", "pink")
     .attr("opacity", ".5");
@@ -73,7 +73,7 @@ d3.csv("data.csv")
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.state}<br>Poverty: ${d.poverty}%<br>Obesity: ${d.obesity}% `);
+        return (`${d.state}<br>Poverty: ${d.poverty}%<br>Smokes: ${d.smokes}% `);
       });
 
     // Step 7: Create tooltip in the chart
@@ -97,11 +97,10 @@ d3.csv("data.csv")
       .attr("x", 0 - (height / 2))
       .attr("dy", "1em")
       .attr("class", "axisText")
-      .text("Obese (%)");
+      .text("Smokes (%)");
 
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
       .text("In Poverty (%)");
   });
-
